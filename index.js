@@ -4,10 +4,9 @@ const bodyParser = require('body-parser');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(bodyParser.json());
 
-// Ruta de verificación Webhook (GET)
+// Webhook verification route
 app.get('/webhook', (req, res) => {
   const VERIFY_TOKEN = 'FELIX_SECRET_TOKEN';
 
@@ -23,13 +22,6 @@ app.get('/webhook', (req, res) => {
   }
 });
 
-// Ruta Webhook para recibir mensajes (POST)
-app.post('/webhook', (req, res) => {
-  console.log('📩 Mensaje recibido de WhatsApp:', JSON.stringify(req.body, null, 2));
-  res.sendStatus(200);
-});
-
-// Iniciar servidor
 app.listen(PORT, () => {
-  console.log(`🚀 F.E.L.I.X. backend corriendo en puerto ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
