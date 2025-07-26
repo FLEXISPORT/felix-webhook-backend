@@ -7,12 +7,13 @@ export default function handler(req, res) {
     const challenge = req.query["hub.challenge"];
 
     if (mode === "subscribe" && token === VERIFY_TOKEN) {
-      console.log("Webhook verificado correctamente ✔");
+      console.log("✅ Webhook verificado correctamente desde FLEXISPORT");
       res.status(200).send(challenge);
     } else {
-      console.warn("Token inválido ❌");
+      console.warn("❌ Token inválido");
       res.sendStatus(403);
     }
   } else {
-    res.status(200).json({ message: "¡Hola desde F.E.L.I.X. y FLEXISPORT!" });
- 
+    res.status(200).json({ message: "Hola desde F.E.L.I.X. y FLEXISPORT 🧠🐅" });
+  }
+}
