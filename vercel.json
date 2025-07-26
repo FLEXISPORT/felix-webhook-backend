@@ -1,0 +1,38 @@
+// index.js
+const express = require('express');
+const app = express();
+const port = process.env.PORT || 3000;
+
+app.use(express.json());
+
+// Ruta GET para verificar el webhook (WhatsApp Business API)
+app.get('/webhook', (req, res) => {
+  const VERIFY_TOKEN = 'FELIX_WEBHOOK_TOKEN';
+
+  const mode = req.query['hub.mode'];
+  const token = req.query['hub.verify_token'];
+  const challenge = req.query['hub.challenge'];
+
+  if (mode && token && mode === 'subscribe' && token === VERIFY_TOKEN) {
+    console.log('WEBHOOK_VERIFICADO');
+    res.status(200).send(challenge);
+  } else {
+    res.sendStatus(403);
+  }
+});
+
+// Ruta POST para recibir mensajes
+app.post('/webhook', (req, res) => {
+  const body = req.body;
+
+  if (body.object) {
+    console.log('🔔 Nuevo evento recibido:', JSON.stringify(body, null, 2));
+    res.status(200).send('EVENT_RECEIVED');
+  } else {
+    res.sendStatus(404);
+  }
+});
+
+app.listen(port, () => {
+  console.log(`🚀 Backend de F.E.L.I.X. activo en http://localhost:${port}`);
+});
