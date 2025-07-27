@@ -1,15 +1,22 @@
 export default function handler(req, res) {
-  if (req.method === 'GET') {
-    const mode = req.query['hub.mode'];
-    const token = req.query['hub.verify_token'];
-    const challenge = req.query['hub.challenge'];
+  const VERIFY_TOKEN = "flexisport-token";
 
-    if (mode && token === 'flexisport-token') {
-      return res.status(200).send(challenge);
+  if (req.method === "GET") {
+    const mode = req.query["hub.mode"];
+    const token = req.query["hub.verify_token"];
+    const challenge = req.query["hub.challenge"];
+
+    if (mode && token) {
+      if (mode === "subscribe" && token === VERIFY_TOKEN) {
+        console.log("WEBHOOK_VERIFICADO");
+        return res.status(200).send(challenge);
+      } else {
+        return res.status(403).send("Token de verificación inválido");
+      }
     } else {
-      return res.status(403).send('Error de verificación');
+      return res.status(400).send("Parámetros insuficientes");
     }
+  } else {
+    res.status(405).send("Método HTTP no permitido");
   }
-
-  res.status(404).send('Método no soportado');
 }
