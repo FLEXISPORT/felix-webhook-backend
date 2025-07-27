@@ -1,5 +1,5 @@
 export default function handler(req, res) {
-  const VERIFY_TOKEN = "FELIX_123"; // Este valor debe ser el MISMO que pongas en Meta
+  const VERIFY_TOKEN = "FELIX_123";
 
   if (req.method === "GET") {
     const mode = req.query["hub.mode"];
@@ -7,16 +7,15 @@ export default function handler(req, res) {
     const challenge = req.query["hub.challenge"];
 
     if (mode === "subscribe" && token === VERIFY_TOKEN) {
-      console.log("✅ Webhook verificado correctamente");
       res.status(200).send(challenge);
     } else {
-      console.warn("❌ Verificación fallida");
       res.sendStatus(403);
     }
-  }
-
-  if (req.method === "POST") {
-    console.log("📩 Mensaje recibido:", JSON.stringify(req.body, null, 2));
-    res.sendStatus(200);
+  } else if (req.method === "POST") {
+    console.log("Webhook recibido:", req.body);
+    res.status(200).end();
+  } else {
+    res.setHeader("Allow", ["GET", "POST"]);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
